@@ -1,0 +1,15 @@
+pcl2costmap: 
+  ros__parameters:
+    path_of_pcd: "/home/lsk/ndt_ws/src/velo.pcd"
+
+    voxel_resolution: 0.1 # [m]
+    ground_thresh: 0.3 #[m]
+    sky_thresh: 2.50 # [m]
+
+    use_costmap: false  # false: occupied_map , true : costmap
+    costmap_threshold: 0.3 
+
+    pgm_name: "my_pgm" # 최종 제작되어 나타날 pgm파일 이름
+
+
+

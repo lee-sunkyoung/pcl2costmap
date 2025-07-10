@@ -1,0 +1,7 @@
+image: /home/lsk/ndt_ws/src/pcl2costmap/final.png
+resolution: 0.1
+origin: [-8.257242, -6.483256, 0.0]  # origin_x,y, orientation
+occupied_thresh: 0.8 # obstacle
+free_thresh: 0.35 #free
+negate: 0 # 0 : white obstacle , 1 : black obstacle
+

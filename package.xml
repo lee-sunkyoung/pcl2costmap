@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+
+  <name>pcl2costmap</name>
+  <version>0.0.0</version>
+  <description>pcd(3D) into costmap(2D)</description>
+
+  <maintainer email="ardcxvsk@gmail.com">lee-sunkyoung</maintainer>
+  <author email="ardcxvsk@gmail.com">lee-sunkyoung</author>
+
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>pcl_conversion</depend>
+  <depend>pcl_ros</depend>
+  <depend>OpenCV</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
+</package>
