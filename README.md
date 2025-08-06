@@ -52,11 +52,16 @@ ros2 launch pcl2costmap pcl2costmap_launch.py
 1) edit the path in both `pcl2costmap/config/map.yaml` and `pcl2costmap/config/loadmap.yaml` files to match your environment.
 
 2) Make sure RViz2 is running and subscribed to the `map` topic before executing the commands below.
+
 ```
-ros2 run nav2_map_server map_server --ros-args --params-file $(echo ~/pcl2costmap/config/loadmap.yaml)```
+ros2 run nav2_map_server map_server --ros-args --params-file $(echo ~/pcl2costmap/config/loadmap.yaml)
+
+```
+
 ```
 ros2 lifecycle set /map_server configure
 ros2 lifecycle set /map_server activate
+
 ```
 
 
