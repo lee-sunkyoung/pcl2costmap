@@ -10,10 +10,18 @@ By default, the map is generated with a black background, obstacles are represen
 - [How to Use](#how-to-use)
 
 
+## Development Environment
+
+| Component   | Version          |
+|-------------|------------------|
+| **OS**      | Ubuntu 22.04     |
+| **ROS**     | Humble Hawksbill     |
+| **OpenCV**  | 4.5.4            |
+
 
 ## Prerequisites
 
-1) Prepare the 3D point cloud data you want to project into 2D and save it as a .pcd file.
+1) Prepare the 3D point cloud data as a .pcd file.
 
 2) Make sure to install the required package:
 ```
@@ -37,20 +45,15 @@ sudo apt install ros-humble-nav2-map-server
 ```
 ros2 launch pcl2costmap pcl2costmap_launch.py
 ```
-3) note the origin_x and origin_y values displayed in the log.
-These values will be used when displaying the map in RViz.
+3) The `origin_x` and `origin_y` values are automatically written to `map.yaml` to ensure that the generated 2D map is spatially aligned with the original 3D point cloud coordinates.
 
 ### 2. Visualize map in RViz2:
 
-1) edit the path in both `pcl2costmap/config/map.yaml` and `pcl2costmap/config/map.yaml` files to match your environment.
+1) edit the path in both `pcl2costmap/config/map.yaml` and `pcl2costmap/config/loadmap.yaml` files to match your environment.
 
-2) Also, enter the previously saved `origin_x` and `origin_y` values into the `origin`field in `map.yaml`.
-This ensures that the 2D map is aligned correctly with the original 3D point cloud position.
-
-3) Make sure RViz2 is running and subscribed to the map topic before executing the commands below.
+2) Make sure RViz2 is running and subscribed to the `map` topic before executing the commands below.
 ```
-ros2 run nav2_map_server map_server --ros-args --params-file /your/path/src/pcl2costmap/config/loadmap.yaml
-```
+ros2 run nav2_map_server map_server --ros-args --params-file $(echo ~/pcl2costmap/config/loadmap.yaml)```
 ```
 ros2 lifecycle set /map_server configure
 ros2 lifecycle set /map_server activate

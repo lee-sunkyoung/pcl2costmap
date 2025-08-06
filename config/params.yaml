@@ -1,5 +1,6 @@
 pcl2costmap: 
   ros__parameters:
+    map_yaml_path: "/home/lsk/ndt_ws/src/pcl2costmap/config/map.yaml"
     path_of_pcd: "/home/lsk/ndt_ws/src/velo.pcd"
 
     voxel_resolution: 0.1 # [m]

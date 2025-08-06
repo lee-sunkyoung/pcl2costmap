@@ -4,6 +4,7 @@
 namespace pcl2costmap {
 
 Pcl2Costmap::Pcl2Costmap() : Node("pcl2costmap") {
+  this->declare_parameter<std::string>("map_yaml_path", "/map/yaml/path");
   this->declare_parameter<std::string>("path_of_pcd", "/path/of/pcd");
   this->declare_parameter<double>("voxel_resolution", 0.0);
   this->declare_parameter<double>("ground_thresh", 0.0);
@@ -14,12 +15,14 @@ Pcl2Costmap::Pcl2Costmap() : Node("pcl2costmap") {
 }
 
 void Pcl2Costmap::setup() {
+  this->get_parameter("map_yaml_path", map_yaml_path);
+  RCLCPP_INFO(this->get_logger(), "map_yaml_path: %s", map_yaml_path.c_str());
   this->get_parameter("path_of_pcd", path_of_pcd);
   RCLCPP_INFO(this->get_logger(), "path_of_pcd: %s", path_of_pcd.c_str());
   this->get_parameter("voxel_resolution", voxel_resolution);
   RCLCPP_INFO(this->get_logger(), "voxel_resolution: %.2f", voxel_resolution);
   this->get_parameter("ground_thresh", ground_thresh);
-  RCLCPP_INFO(this->get_logger(), "ground_thresh: %.2f", ground_thresh);  
+  RCLCPP_INFO(this->get_logger(), "ground_thresh: %.2f", ground_thresh);
   this->get_parameter("sky_thresh", sky_thresh);
   RCLCPP_INFO(this->get_logger(), "sky_thresh: %.2f", sky_thresh);
   this->get_parameter("use_costmap", use_costmap);
@@ -100,20 +103,18 @@ void Pcl2Costmap::make_xy2d() {
 
     if (row >= 0 && row < height && col >= 0 && col < width) {
       if (pt.z < ground_thresh) {
-        map_image.at<unsigned char>(row, col) = 127; 
-      } 
-      else if (pt.z> sky_thresh){
-      continue;
-      }
-      else {
+        map_image.at<unsigned char>(row, col) = 127;
+      } else if (pt.z > sky_thresh) {
+        continue;
+      } else {
         map_image.at<unsigned char>(row, col) = 255;  // 흰색: 장애물
       }
     }
   }
 
-  //contour
-  cv::Mat erode_image =cv::Mat::zeros(height, width, CV_8UC1);
-  cv::Mat dilate_image =cv::Mat::zeros(height, width, CV_8UC1);
+  // contour
+  cv::Mat erode_image = cv::Mat::zeros(height, width, CV_8UC1);
+  cv::Mat dilate_image = cv::Mat::zeros(height, width, CV_8UC1);
 
   cv::erode(map_image, erode_image, cv::Mat(), cv::Point(-1, -1), 1);
   cv::dilate(erode_image, dilate_image, cv::Mat(), cv::Point(-1, -1), 1);
@@ -121,17 +122,52 @@ void Pcl2Costmap::make_xy2d() {
   // save
   cv::imwrite(pgm_name + ".png", dilate_image);
   RCLCPP_INFO(this->get_logger(), "Saved image as %s", pgm_name.c_str());
-  
-  
   RCLCPP_INFO(this->get_logger(), "origin_x: %f, origin_y: %f", min_x, min_y);
   RCLCPP_INFO(this->get_logger(), "map_resolution: %f", map_resolution);
   origin_x = min_x;
   origin_y = min_y;
   map_width = width;
   map_height = height;
-  map_resolution = resolution;
+  map_resolution = resolution;  
+  
+  write_map_yaml();
 }
-}  // namespace pcl2costmap
+
+void Pcl2Costmap::write_map_yaml() {
+  std::ifstream file(map_yaml_path);
+  if (!file.is_open()) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to open YAML file: %s",
+                 map_yaml_path.c_str());
+    return;
+  }
+
+  std::stringstream buffer;
+  std::string line;
+
+  while (std::getline(file, line)) {
+    if (line.find("origin:") != std::string::npos) {
+      std::ostringstream new_origin;
+      new_origin << "origin: [" << origin_x << ", " << origin_y << ", 0.0]";
+      buffer << new_origin.str() << "\n";
+    } else {
+      buffer << line << "\n";
+    }
+  }
+  file.close();
+
+  std::ofstream outfile(map_yaml_path);
+  if (!outfile.is_open()) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to write YAML file: %s",
+                 map_yaml_path.c_str());
+    return;
+  }
+  outfile << buffer.str();
+  outfile.close();
+
+  RCLCPP_INFO(this->get_logger(), "Updated origin in YAML: [%f, %f]", origin_x,
+              origin_y);
+}
+} // namespace pcl2costmap
 
 int main(int argc, char* argv[]) {
   rclcpp::init(argc, argv);

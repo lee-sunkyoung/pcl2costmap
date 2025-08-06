@@ -26,8 +26,11 @@ class Pcl2Costmap : public rclcpp::Node {
   void voxel();
   void passthrough();
   void make_xy2d();
- 
+  
+  void write_map_yaml();
+  
   private:
+  std::string map_yaml_path;
   std::string path_of_pcd;
   float voxel_resolution;
   float ground_thresh;
