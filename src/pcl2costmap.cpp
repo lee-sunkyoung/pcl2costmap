@@ -145,10 +145,20 @@ void Pcl2Costmap::write_map_yaml() {
   std::string line;
 
   while (std::getline(file, line)) {
-    if (line.find("origin:") != std::string::npos) {
+    if (line.find("voxel_resolution:") != std::string::npos) {
+      std::ostringstream new_voxel_resolution;
+      new_voxel_resolution << "    voxel_resolution: " << voxel_resolution ;
+      buffer << new_voxel_resolution.str() << "\n";
+    } 
+    else if (line.find("origin:") != std::string::npos) {
       std::ostringstream new_origin;
-      new_origin << "origin: [" << origin_x << ", " << origin_y << ", 0.0]";
+      new_origin << "    origin: [" << origin_x << ", " << origin_y << ", 0.0]";
       buffer << new_origin.str() << "\n";
+    } 
+    else if(line.find("map_size:") != std::string::npos){
+      std::ostringstream new_map_size;
+      new_map_size << "    map_size: [" << map_width << ", " << map_height << "]";
+      buffer << new_map_size.str() << "\n";
     } else {
       buffer << line << "\n";
     }

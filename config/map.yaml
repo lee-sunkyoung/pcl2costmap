@@ -1,6 +1,7 @@
-image: /home/lsk/ndt_ws/src/pcl2costmap/final.png
+image: /home/robit/colcon_ws/src/pcl2costmap/final.png
 resolution: 0.1
-origin: [-8.25724, -6.48326, 0.0]
+origin: [-7.43075, -7.88589, 0.0]
+map_size: [473, 285, 0.0]
 occupied_thresh: 0.8 # obstacle
 free_thresh: 0.35 #free
 negate: 0 # 0 : white obstacle , 1 : black obstacle

@@ -1,14 +1,14 @@
 pcl2costmap: 
   ros__parameters:
-    map_yaml_path: "/home/lsk/ndt_ws/src/pcl2costmap/config/map.yaml"
-    path_of_pcd: "/home/lsk/ndt_ws/src/velo.pcd"
+    map_yaml_path: "/home/robit/colcon_ws/src/path_planner/config/param.yaml"
+    path_of_pcd: "/home/robit/colcon_ws/src/map.pcd"
 
-    voxel_resolution: 0.1 # [m]
-    ground_thresh: 0.3 #[m]
+    voxel_resolution: 0.05 # [m]
+    ground_thresh: -1.0 #[m]
     sky_thresh: 2.50 # [m]
 
     use_costmap: false  # false: occupied_map , true : costmap
-    costmap_threshold: 0.3 
+    costmap_threshold: 0.01 
 
     pgm_name: "my_pgm" # 최종 제작되어 나타날 pgm파일 이름
 
